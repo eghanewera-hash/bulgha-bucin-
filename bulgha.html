@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Bucin Egha & Bulan</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: 'Courier New', monospace;
+      color: yellow;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      z-index: 5;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px yellow;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    video {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px yellow;
+    }
+
+    #text {
+      display: inline-block;
+      border-right: 2px solid yellow;
+      animation: blink-caret 0.75s step-end infinite;
+      white-space: pre-wrap;
+      font-size: 18px;
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: yellow; }
+    }
+
+    .music-button {
+      font-size: 30px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: pink;
+      margin-top: 20px;
+    }
+
+    .music-button:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="container">
+  <video autoplay muted loop playsinline>
+    <source src="https://files.catbox.moe/i87bce.mp4" type="video/mp4">
+    Browser kamu tidak support video.
+  </video>
+  <div id="text"></div>
+  <button id="toggleMusic" class="music-button">💓</button>
+</div>
+
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/a1rxbx.mp4" type="audio/mp4">
+</audio>
+
+<script>
+  // Background bintang jatuh
+  const canvas = document.getElementById("stars");
+  const ctx = canvas.getContext("2d");
+  let w, h;
+  let stars = [];
+
+  function resizeCanvas() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createStars() {
+    stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size: Math.random() * 1.5,
+        speed: Math.random() * 1 + 0.3
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "white";
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = "white";
+    for (let star of stars) {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fill();
+      star.y += star.speed;
+      if (star.y > h) {
+        star.y = 0;
+        star.x = Math.random() * w;
+      }
+    }
+    requestAnimationFrame(drawStars);
+  }
+
+  createStars();
+  drawStars();
+
+  // Efek ketik
+  const fullText = `haii bulan sayang kamuu tau ga? klo akuu beruntung bangett dapetin kamu, aku ngrsa km emng tulus sm akuu ga mainn main, maaf yaa aku blum bisa jdi cwo yang km mau huhuu tpi km hruss tau klo akuu sayang banget sm kamuu, mungkin aku gabisaa ke orng lainn aku yaa aku dia yaa dia akuu sayang sama kamu dengan caraku sendiri, kamu jangann tinggalin akuu yaa, anggap akuu pacar sekaligus sahabat kamuu okayy?? klo kamuu butuh senderan bisa ke aku klo km butuh tmn ceritaa bisa ke akuu, aku 24/7 ada buat kamuu, jangan pernah ngerasa sendiri yaa banya org baikk di sekeliling kamuu. aku ngrsa pas sama kamu ke dihargai banget kamu sayang ke aku tuluss juga jdi akuu bahagiaa bangett bisa jdi milik kamu bisa masuk kedalam kehidupan kamu, aku harap kita bisa sama'teruss yaaa, I LOVEEE UUU
+
+nii pantun buat kamu 🫵
+Naik pesawat ke Kalimantan 
+Jangan lupa singgah membeli amplang 
+Walau jarak dan waktu jadi halangan 
+Sayangku ke kamu takkan pernah berkurang`;
+  const teksEl = document.getElementById("text");
+  let i = 0;
+
+  function typeWriter() {
+    if (i < fullText.length) {
+      teksEl.innerHTML += fullText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 100);
+    }
+  }
+
+  typeWriter();
+
+  // Musik player 💓 💝
+  const btn = document.getElementById("toggleMusic");
+  const music = document.getElementById("music");
+
+  btn.addEventListener("click", () => {
+    if (music.paused) {
+      music.play();
+      btn.textContent = "💝";
+    } else {
+      music.pause();
+      btn.textContent = "💓";
+    }
+  });
+</script>
+
+</body>
+</html>
